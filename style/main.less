@@ -134,6 +134,32 @@ div.month{
 }
 
 /*--------------------------------------------*/
+/*---> TOOLBAR <------------------------------*/
+/*--------------------------------------------*/
+
+@buttonHeight: 2 * @tx;
+
+div.slider{
+	overflow-x: scroll;
+	width: 100vw;
+	height: @buttonHeight;
+}
+
+div.button-toolbar{
+	background: blue;
+	width: 1000vw;
+
+	button{
+		background: red;
+		width: 40vw;
+		height: @buttonHeight;
+		line-height: @buttonHeight;
+		display: inline-block;
+	}
+
+}
+
+/*--------------------------------------------*/
 /*---> HEADER & FOOTER <----------------------*/
 /*--------------------------------------------*/
 

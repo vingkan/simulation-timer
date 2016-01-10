@@ -65,6 +65,11 @@ function setCalendar(calendarDiv, toolbarDiv, config){
 		var monthDiv = document.createElement("div");
 			monthDiv.classList.add("month");
 			calendarDiv.appendChild(monthDiv);
+		var toolbarMonth = document.createElement("button");
+			toolbarMonth.classList.add("month-button");
+			toolbarMonth.innerHTML = moment(new Date(0, currentMonth)).format("MMMM YYYY");
+			toolbarDiv.appendChild(toolbarMonth);
+			console.log(toolbarDiv.style.width);
 		currentMonth++;
 	}
 	var monthDivs = document.getElementsByClassName("month");

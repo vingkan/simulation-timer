@@ -24,6 +24,24 @@
 		<h1>Simulation Time</h1>
 		<div id="simulation-clock"></div>
 
+		<div id="calendar">
+			<div class="week"></div>
+			<div class="week"></div>
+			<div class="week"></div>
+			<div class="week"></div>
+			<div class="week"></div>
+		</div>
+
+		<script type="text/javascript">
+
+		var weekDivs = document.getElementsByClassName("week");
+		$.each(weekDivs, function(index, div){
+			for(var d = 0; d < 7; d++){
+				div.innerHTML += '<div class="weekday">D</div>';
+			}
+		});
+
+		</script>
 
 		<script src="scripts/main.js"></script>
 

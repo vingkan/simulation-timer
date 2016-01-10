@@ -38,15 +38,35 @@ function getSimulationTime(now, config){
 	return simTime;
 }
 
+//WARNING: ONLY WORKS FOR SIMULATIONS LESS THAN A YEAR LONG
+function getMonthInSimulation(timestamp, config){
+	var startMonth = new Date(config.SIMULATION_START).getMonth();
+	var currentMonth = new Date(timestamp).getMonth();
+	return (currentMonth - startMonth);
+}
+
+function getWeekInMonthInSimulation(timestamp, config){
+	//var startDay = time
+}
+
 function setClock(now, config){
 	var simTime = getSimulationTime(now, config);
 	realClock.innerHTML = moment(now).format("M/D hh:mm:ss A");
 	simulationClock.innerHTML = moment(simTime).format("M/D hh:mm A");
 }
 
+function showCurrentDate(now, simWeek, config){
+	var simTime = getSimulationTime(now, config);
+	var simDate = new Date(simTime);
+	var monthIndex = getMonthInSimulation(now, config);
+	var monthDiv = getMonthDiv(calendarDiv, monthIndex);
+	var dateBox = monthDiv.children[simWeek + 1].children[simDate.getDay()];
+}
+
 window.setInterval(function(){
 	var realNow = new Date().getTime();
 	setClock(realNow, CONFIG);
+	//showCurrentDate(realNow, CONFIG);
 }, 25);
 
 function toggleMonthView(calendarDiv, monthIndex){

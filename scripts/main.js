@@ -1,4 +1,10 @@
 var GLOBAL = {
+	DAY: 86400000, //one day in milliseconds
+	MINUTE: 60000, //one minute in milliseconds
+	HOUR: 3600000 //one hour in milliseconds
+}
+
+var CONFIG = {
 	SIMULATION_START: 1420092000000,
 	SIMULATION_END: 1420956000000,
 	REAL_START: 1420855200000,
@@ -8,7 +14,9 @@ var GLOBAL = {
 var realClock = document.getElementById('real-clock');
 var simulationClock = document.getElementById('simulation-clock');
 
-console.log(moment(GLOBAL.REAL_START).format("[Started at:] M/D hh:mm A"));
+var simulationCalendar = document.getElementById('simulation-calendar');
+
+console.log(moment(CONFIG.REAL_START).format("[Started at:] M/D hh:mm A"));
 
 /*
  * Returns scale between real time and simulation time
@@ -23,8 +31,16 @@ function calculateTimeScale(config){
 
 window.setInterval(function(){
 	var realNow = new Date().getTime();
-	var scale = calculateTimeScale(GLOBAL);
+	var scale = calculateTimeScale(CONFIG);
 	//console.log("Scale: " + scale);
 	realClock.innerHTML = moment(realNow).format("M/D hh:mm A");
 	simulationClock.innerHTML = moment(realNow * scale).format("M/D hh:mm A");
 });
+
+
+function loadCalendar(calendarDiv, config){
+	var weekDivs = calendarDiv.children;
+	console.log(weekDivs)
+}
+
+loadCalendar(simulationCalendar, CONFIG);

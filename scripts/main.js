@@ -49,6 +49,15 @@ function convertToRealTime(simDuration, config){
 	return realDuration;
 }
 
+function minutesToSeconds(minutes){
+	var fraction = minutes - Math.floor(minutes);
+	var seconds = fraction * 60;
+	var displayMinutes = Math.floor(minutes);
+	var displaySeconds = Math.floor(seconds).toString().length === 1 ? "0" + Math.floor(seconds) : Math.floor(seconds);
+	var time = displayMinutes + ":" + displaySeconds;
+	return time;
+}
+
 //WARNING: ONLY WORKS FOR SIMULATIONS LESS THAN A YEAR LONG
 function getMonthInSimulation(timestamp, config){
 	var startMonth = new Date(config.SIMULATION_START).getMonth();
@@ -85,7 +94,7 @@ function showTimeUntil(timestamp, config){
 
 function setCountdown(now, checkpoint, config){
 	var realTimeRemaining = showTimeUntil(checkpoint, config);
-	countdownClock.innerHTML = realTimeRemaining.toFixed(2);
+	countdownClock.innerHTML = minutesToSeconds(realTimeRemaining);
 }
 
 STATE.CHECKPOINT = CONFIG.SIMULATION_END;

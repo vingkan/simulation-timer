@@ -1,5 +1,6 @@
 var GLOBAL = {
 	DAY: 86400000, //one day in milliseconds
+	WEEK: 604800000, //one week in milliseconds
 	MINUTE: 60000, //one minute in milliseconds
 	HOUR: 3600000 //one hour in milliseconds
 }
@@ -41,6 +42,19 @@ window.setInterval(function(){
 function loadCalendar(calendarDiv, config){
 	var weekDivs = calendarDiv.children;
 	console.log(weekDivs)
+	var simWeek = 0;
+	var simTime = config.SIMULATION_START;
+	while(simTime < config.SIMULATION_END){
+		var simDate = new Date(simTime);
+		var dateBox = weekDivs[simWeek].children[simDate.getDay()];
+		dateBox.innerHTML = simDate.getDate();
+		dateBox.classList.remove("weekday-inactive");
+		dateBox.classList.add("weekday-active");
+		simTime += GLOBAL.DAY;
+		if(simDate.getDay() === 6){
+			simWeek++;
+		}
+	}
 }
 
 loadCalendar(simulationCalendar, CONFIG);

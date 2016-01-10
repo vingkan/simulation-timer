@@ -37,7 +37,7 @@
 		var weekDivs = document.getElementsByClassName("week");
 		$.each(weekDivs, function(index, div){
 			for(var d = 0; d < 7; d++){
-				div.innerHTML += '<div class="weekday">D</div>';
+				div.innerHTML += '<div class="weekday weekday-inactive">-</div>';
 			}
 		});
 

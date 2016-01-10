@@ -12,7 +12,7 @@
 /*---> FONTS <--------------------------------*/
 /*--------------------------------------------*/
 
-@textSize: 3vh;
+@tx: 3vh;
 
 .HeadFont(){
 	font-family: sans-serif;
@@ -28,7 +28,7 @@
 
 p, h1, h2, h3, ul, li{
 	.BodyFont();
-	margin: (0.5 * @textSize) auto;
+	margin: (0.5 * @tx) auto;
 }
 
 h1, h2, h3{
@@ -37,23 +37,23 @@ h1, h2, h3{
 }
 
 h1{
-	font-size: 1.5 * @textSize;
-	line-height: 1.75 * @textSize;
+	font-size: 1.5 * @tx;
+	line-height: 1.75 * @tx;
 }
 
 h2{
-	font-size: 1.25 * @textSize;
-	line-height: 1.5 * @textSize;
+	font-size: 1.25 * @tx;
+	line-height: 1.5 * @tx;
 }
 
 h2{
-	font-size: 1.1 * @textSize;
-	line-height: 1.35 * @textSize;
+	font-size: 1.1 * @tx;
+	line-height: 1.35 * @tx;
 }
 
 p{
-	font-size: 1.0 * @textSize;
-	line-height: 1.25 * @textSize;
+	font-size: 1.0 * @tx;
+	line-height: 1.25 * @tx;
 	text-align: center;
 }
 
@@ -63,10 +63,10 @@ ul{
 }
 
 li{
-	font-size: 1.0 * @textSize;
-	line-height: 1.25 * @textSize;
+	font-size: 1.0 * @tx;
+	line-height: 1.25 * @tx;
 	list-style: disc;
-	margin: (0.15 * @textSize) auto;
+	margin: (0.15 * @tx) auto;
 }
 
 /*--------------------------------------------*/
@@ -77,7 +77,7 @@ html{
 	background: white;
 	//Default Text Styles
 	.BodyFont();
-	font-size: @textSize;
+	font-size: @tx;
 	color: @charcoal;
 }
 
@@ -102,12 +102,31 @@ body{
 
 div.calendar{
 
+	color: white;
+	text-align: center;
+
 	div.week{
 		
 		background: blue;
+		width: 90%;
+		margin: 1%;
 
 		div.weekday{
-			
+			width: 10%;
+			height: 1.5 * @tx;
+			line-height: 1.5 * @tx;
+			margin: 1%;
+			display: inline-block;
+		}
+
+		div.weekday-inactive{
+			background: transparent;
+			color: transparent;
+		}
+
+		div.weekday-active{
+			background: orange;
+			color: white;
 		}
 
 	}

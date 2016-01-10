@@ -6,24 +6,73 @@ var GLOBAL = {
 }
 
 var STATE = {
-	CHECKPOINT: 0
+	CHECKPOINT: 0,
+	LAST: 0,
+	LOADED: false
 }
 
 var CONFIG = {
-	SIMULATION_START: 1457931600000,
-	SIMULATION_END: 1463979600000,
-	REAL_START: 1452391200000,
-	REAL_END: 1452403800000
+	SIMULATION_START: 0,
+	SIMULATION_END: 0,
+	REAL_START: 0,
+	REAL_END: 0
 }
 
 var realClock = document.getElementById('real-clock');
 var simulationClock = document.getElementById('simulation-clock');
 var countdownClock = document.getElementById('countdown-clock');
+var checkpointLabel = document.getElementById('checkpoint-label');
 
 var simulationCalendar = document.getElementById('simulation-calendar');
 var calendarToolbar = document.getElementById('calendar-toolbar');
 
-console.log(moment(CONFIG.REAL_START).format("[Started at:] M/D hh:mm A"));
+vex.defaultOptions.className = 'vex-theme-wireframe';
+
+var PATH = "https://simulation-timer.firebaseio.com/";
+
+function getConfiguration(key){
+	var firebase = new Firebase(PATH + key);
+	firebase.once("value", function(snapshot){
+		var config = snapshot.val();
+		if(config !== null){
+			CONFIG = config;
+			
+			createCalendar(simulationCalendar, calendarToolbar, config);
+			loadCalendar(simulationCalendar, config);
+
+			setCheckPoint(config.SIMULATION_END);
+			STATE.LAST = config.SIMULATION_START;
+			STATE.LOADED = true;
+			/*document.getElementById("menu").display = "none";
+			document.getElementById("main-timer").display = "block";*/
+		}
+		else{
+			getUserKey();
+		}
+	});
+}
+
+window.setInterval(function(){
+	if(STATE.LOADED){
+		var realNow = new Date().getTime();
+		setClock(realNow, CONFIG);
+		setCountdown(realNow, STATE.CHECKPOINT, CONFIG);
+		//setMonthView(realNow, CONFIG);
+	}
+}, 25);
+
+getUserKey()
+
+function getUserKey(){
+	vex.dialog.prompt({
+		message: "Enter the key give to you by your simulation organizer.",
+		callback: function(key){
+			if(key){
+				getConfiguration(key);	
+			}
+		}
+	});
+}
 
 /*
  * Returns scale between real time and simulation time
@@ -54,7 +103,7 @@ function minutesToSeconds(minutes){
 	var seconds = fraction * 60;
 	var displayMinutes = Math.floor(minutes);
 	var displaySeconds = Math.floor(seconds).toString().length === 1 ? "0" + Math.floor(seconds) : Math.floor(seconds);
-	var time = displayMinutes + ":" + displaySeconds;
+	var time = displayMinutes + " minutes, " + displaySeconds + " seconds";
 	return time;
 }
 
@@ -97,15 +146,21 @@ function setCountdown(now, checkpoint, config){
 	countdownClock.innerHTML = minutesToSeconds(realTimeRemaining);
 }
 
-STATE.CHECKPOINT = CONFIG.SIMULATION_END;
-console.log(STATE.CHECKPOINT);
+function setMonthView(now, config){
+	var simTime = getSimulationTime(now, config);
+	var simDate = new Date(simTime);
+	var lastDate = new Date(STATE.LAST);
+	if(simDate.getMonth() !== lastDate.getMonth()){
+		var monthIndex = getMonthInSimulation(simTime, config);
+		toggleMonthView(simulationCalendar, monthIndex);
+	}
+}
 
-window.setInterval(function(){
-	var realNow = new Date().getTime();
-	setClock(realNow, CONFIG);
-	setCountdown(realNow, STATE.CHECKPOINT, CONFIG);
-	//showCurrentDate(realNow, CONFIG);
-}, 25);
+function setCheckPoint(timestamp){
+	STATE.CHECKPOINT = timestamp;
+	var label = moment(timestamp).format("M/D");
+	checkpointLabel.innerHTML = label;
+}
 
 function toggleMonthView(calendarDiv, monthIndex){
 	var monthDiv = getMonthDiv(calendarDiv, monthIndex);
@@ -135,7 +190,6 @@ function createCalendar(calendarDiv, toolbarDiv, config){
 			toolbarMonth.innerHTML = moment(currentDate).format("MMMM YYYY");
 			toolbarMonth.id = "month-button-" + m;
 			toolbarDiv.appendChild(toolbarMonth);
-			console.log(toolbarDiv.style.width);
 		currentMonth++;
 		currentDate.setMonth(currentDate.getMonth() + 1);
 	}
@@ -163,8 +217,7 @@ function createCalendar(calendarDiv, toolbarDiv, config){
 	});
 	$(".weekday").click(function(event){
 		var timestamp = parseInt(this.id.split("-")[1]);
-		console.log(timestamp)
-		STATE.CHECKPOINT = timestamp;
+		setCheckPoint(timestamp);
 	});
 }
 
@@ -177,7 +230,7 @@ function loadCalendar(calendarDiv, config){
 	var simMonth = 0;
 	var simWeek = 0;
 	var simTime = config.SIMULATION_START;
-	while(simTime < config.SIMULATION_END){
+	while(simTime <= config.SIMULATION_END){
 		var simDate = new Date(simTime);
 		var monthDiv = getMonthDiv(calendarDiv, simMonth);
 		var dateBox = monthDiv.children[simWeek + 1].children[simDate.getDay()];
@@ -195,6 +248,3 @@ function loadCalendar(calendarDiv, config){
 		}
 	}
 }
-
-createCalendar(simulationCalendar, calendarToolbar, CONFIG);
-loadCalendar(simulationCalendar, CONFIG);

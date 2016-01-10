@@ -15,11 +15,13 @@
 @tx: 3vh;
 
 .HeadFont(){
-	font-family: sans-serif;
+	font-family: 'Titillium Web', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
 }
 
 .BodyFont(){
-	font-family: sans-serif;
+	font-family: 'Titillium Web', sans-serif;
 }
 
 /*--------------------------------------------*/
@@ -101,6 +103,14 @@ section{
 }
 
 /*--------------------------------------------*/
+/*---> CLOCKS <-------------------------------*/
+/*--------------------------------------------*/
+
+div.clock{
+	text-align: center;
+}
+
+/*--------------------------------------------*/
 /*---> CALENDAR <-----------------------------*/
 /*--------------------------------------------*/
 
@@ -132,7 +142,7 @@ div.month{
 		}
 
 		div.weekday-active{
-			background: orange;
+			background: @mainColor;
 			color: white;
 		}
 
@@ -158,12 +168,14 @@ div.button-toolbar{
 	width: 1000vw;
 
 	button{
-		background: red;
+		background: @mainColor;
 		width: 20vw;
 		margin: 1vh;
 		height: @buttonHeight;
 		line-height: @buttonHeight;
 		display: inline-block;
+		color: white;
+		.BodyFont();
 	}
 
 }

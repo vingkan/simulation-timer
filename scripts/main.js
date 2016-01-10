@@ -8,8 +8,8 @@ var GLOBAL = {
 var CONFIG = {
 	SIMULATION_START: 1420092000000,
 	SIMULATION_END: 1420956000000,
-	REAL_START: 1420855200000,
-	REAL_END: 1420866000000
+	REAL_START: 1452391200000,
+	REAL_END: 1452402000000
 }
 
 var realClock = document.getElementById('real-clock');
@@ -30,13 +30,22 @@ function calculateTimeScale(config){
 	return scale;
 }
 
+function getSimulationTime(now, config){
+	var realElapsed = now - config.REAL_START;
+	var scale = calculateTimeScale(config);
+	var simTime = (realElapsed * scale) + config.SIMULATION_START;
+	return simTime;
+}
+
+var counter = 0;
+
 window.setInterval(function(){
 	var realNow = new Date().getTime();
-	var scale = calculateTimeScale(CONFIG);
-	//console.log("Scale: " + scale);
-	realClock.innerHTML = moment(realNow).format("M/D hh:mm A");
-	simulationClock.innerHTML = moment(realNow * scale).format("M/D hh:mm A");
-});
+	var simTime = getSimulationTime(realNow, CONFIG);
+	realClock.innerHTML = moment(realNow).format("M/D hh:mm:ss A");
+	simulationClock.innerHTML = moment(simTime).format("M/D hh:mm A");
+	counter++;
+}, 25);
 
 
 function loadCalendar(calendarDiv, config){

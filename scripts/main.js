@@ -7,7 +7,7 @@ var GLOBAL = {
 
 var CONFIG = {
 	SIMULATION_START: 1420092000000,
-	SIMULATION_END: 1420956000000,
+	SIMULATION_END: 1431579600000,
 	REAL_START: 1452391200000,
 	REAL_END: 1452402000000
 }
@@ -37,33 +37,70 @@ function getSimulationTime(now, config){
 	return simTime;
 }
 
+function setClock(now){
+	var simTime = getSimulationTime(now, CONFIG);
+	realClock.innerHTML = moment(now).format("M/D hh:mm:ss A");
+	simulationClock.innerHTML = moment(simTime).format("M/D hh:mm A");
+}
+
 var counter = 0;
 
 window.setInterval(function(){
 	var realNow = new Date().getTime();
-	var simTime = getSimulationTime(realNow, CONFIG);
-	realClock.innerHTML = moment(realNow).format("M/D hh:mm:ss A");
-	simulationClock.innerHTML = moment(simTime).format("M/D hh:mm A");
+	setClock(realNow);
 	counter++;
 }, 25);
 
+function setCalendar(calendarDiv, config){
+	var startMonth = new Date(config.SIMULATION_START).getMonth();
+	var endMonth = new Date(config.SIMULATION_END).getMonth();
+	var months = (endMonth - startMonth) + 1;
+	for(var m = 0; m < months; m++){
+		var monthDiv = document.createElement("div");
+			monthDiv.classList.add("month");
+			calendarDiv.appendChild(monthDiv);
+	}
+	var monthDivs = document.getElementsByClassName("month");
+	$.each(monthDivs, function(index, div){
+		for(var w = 0; w < 5; w++){
+			var weekDiv = document.createElement("div");
+				weekDiv.classList.add("week");
+				div.appendChild(weekDiv);
+		}
+	});
+	var weekDivs = document.getElementsByClassName("week");
+	$.each(weekDivs, function(index, div){
+		for(var d = 0; d < 7; d++){
+			var dayDiv = document.createElement("div");
+				dayDiv.classList.add("weekday");
+				dayDiv.classList.add("weekday-inactive");
+				div.appendChild(dayDiv);
+		}
+	});
+}
+
 
 function loadCalendar(calendarDiv, config){
-	var weekDivs = calendarDiv.children;
-	console.log(weekDivs)
+	var monthDivs = calendarDiv.children;
+	var simMonth = 0;
 	var simWeek = 0;
 	var simTime = config.SIMULATION_START;
 	while(simTime < config.SIMULATION_END){
 		var simDate = new Date(simTime);
-		var dateBox = weekDivs[simWeek].children[simDate.getDay()];
+		var dateBox = monthDivs[simMonth].children[simWeek].children[simDate.getDay()];
 		dateBox.innerHTML = simDate.getDate();
 		dateBox.classList.remove("weekday-inactive");
 		dateBox.classList.add("weekday-active");
 		simTime += GLOBAL.DAY;
 		if(simDate.getDay() === 6){
 			simWeek++;
+			if(simWeek > 4){
+				simWeek = 0;
+				simMonth++;
+			}
 		}
 	}
 }
 
+setCalendar(simulationCalendar, CONFIG);
 loadCalendar(simulationCalendar, CONFIG);

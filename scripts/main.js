@@ -92,15 +92,19 @@ function setCalendar(calendarDiv, toolbarDiv, config){
 	});
 }
 
+function getMonthDiv(calendarDiv, index){
+	var monthDivs = calendarDiv.children;
+	return monthDivs[(index * 2) + 1];
+}
 
 function loadCalendar(calendarDiv, config){
-	var monthDivs = calendarDiv.children;
 	var simMonth = 0;
 	var simWeek = 0;
 	var simTime = config.SIMULATION_START;
 	while(simTime < config.SIMULATION_END){
 		var simDate = new Date(simTime);
-		var dateBox = monthDivs[(simMonth * 2) + 1].children[simWeek].children[simDate.getDay()];
+		var monthDiv = getMonthDiv(calendarDiv, simMonth);
+		var dateBox = monthDiv.children[simWeek].children[simDate.getDay()];
 		dateBox.innerHTML = simDate.getDate();
 		dateBox.classList.remove("weekday-inactive");
 		dateBox.classList.add("weekday-active");

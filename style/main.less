@@ -142,7 +142,8 @@ div.month{
 div.slider{
 	overflow-x: scroll;
 	width: 100vw;
-	height: @buttonHeight;
+	padding: 1vh;
+	height: @buttonHeight * 1.1;
 }
 
 div.button-toolbar{
@@ -151,7 +152,8 @@ div.button-toolbar{
 
 	button{
 		background: red;
-		width: 40vw;
+		width: 20vw;
+		margin: 1vh;
 		height: @buttonHeight;
 		line-height: @buttonHeight;
 		display: inline-block;
@@ -180,10 +182,11 @@ input, button, select{
 
 @scrollBar: white;
 @scrollBarBack: @mainColor;
+@scrollBarSize: 10px;
 
 ::-webkit-scrollbar{
-	width: 10px;
-	height: 10px;
+	width: @scrollBarSize;
+	height: @scrollBarSize;
 	background: @scrollBarBack;
 	z-index: 50;
 }
@@ -204,12 +207,12 @@ input, button, select{
 	background: @scrollBar;
 	//border-radius: 5px;
 	position: absolute;
-	margin-left: -10px;
+	margin-left: -1.0 * @scrollBarSize;
 }
 
 ::-webkit-scrollbar-corner{
-	width: 10px;
-	height: 10px;
+	width: @scrollBarSize;
+	height: @scrollBarSize;
 	background: @scrollBarBack;
 }
 

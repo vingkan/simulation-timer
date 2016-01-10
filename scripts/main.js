@@ -16,6 +16,7 @@ var realClock = document.getElementById('real-clock');
 var simulationClock = document.getElementById('simulation-clock');
 
 var simulationCalendar = document.getElementById('simulation-calendar');
+var calendarToolbar = document.getElementById('calendar-toolbar');
 
 console.log(moment(CONFIG.REAL_START).format("[Started at:] M/D hh:mm A"));
 
@@ -51,7 +52,7 @@ window.setInterval(function(){
 	counter++;
 }, 25);
 
-function setCalendar(calendarDiv, config){
+function setCalendar(calendarDiv, toolbarDiv, config){
 	var startMonth = new Date(config.SIMULATION_START).getMonth();
 	var endMonth = new Date(config.SIMULATION_END).getMonth();
 	var months = (endMonth - startMonth) + 1;
@@ -109,5 +110,5 @@ function loadCalendar(calendarDiv, config){
 	}
 }
 
-setCalendar(simulationCalendar, CONFIG);
+setCalendar(simulationCalendar, calendarToolbar, CONFIG);
 loadCalendar(simulationCalendar, CONFIG);

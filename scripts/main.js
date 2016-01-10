@@ -38,21 +38,27 @@ function getSimulationTime(now, config){
 	return simTime;
 }
 
-function setClock(now){
-	var simTime = getSimulationTime(now, CONFIG);
+function setClock(now, config){
+	var simTime = getSimulationTime(now, config);
 	realClock.innerHTML = moment(now).format("M/D hh:mm:ss A");
 	simulationClock.innerHTML = moment(simTime).format("M/D hh:mm A");
 }
 
-var counter = 0;
-
 window.setInterval(function(){
 	var realNow = new Date().getTime();
-	setClock(realNow);
-	counter++;
+	setClock(realNow, CONFIG);
 }, 25);
 
-function setCalendar(calendarDiv, toolbarDiv, config){
+function toggleMonthView(calendarDiv, monthIndex){
+	var monthDiv = getMonthDiv(calendarDiv, monthIndex);
+	var allMonths = calendarDiv.getElementsByClassName("month");
+	$.each(allMonths, function(index, div){
+		div.style.display = "none";
+	});
+	monthDiv.style.display = "block";
+}
+
+function createCalendar(calendarDiv, toolbarDiv, config){
 	var startMonth = new Date(config.SIMULATION_START).getMonth();
 	var endMonth = new Date(config.SIMULATION_END).getMonth();
 	var months = (endMonth - startMonth) + 1;
@@ -75,7 +81,7 @@ function setCalendar(calendarDiv, toolbarDiv, config){
 		currentMonth++;
 		currentDate.setMonth(currentDate.getMonth() + 1);
 	}
-	var monthDivs = document.getElementsByClassName("month");
+	var monthDivs = calendarDiv.getElementsByClassName("month");
 	$.each(monthDivs, function(index, div){
 		for(var w = 0; w < 5; w++){
 			var weekDiv = document.createElement("div");
@@ -83,7 +89,7 @@ function setCalendar(calendarDiv, toolbarDiv, config){
 				div.appendChild(weekDiv);
 		}
 	});
-	var weekDivs = document.getElementsByClassName("week");
+	var weekDivs = calendarDiv.getElementsByClassName("week");
 	$.each(weekDivs, function(index, div){
 		for(var d = 0; d < 7; d++){
 			var dayDiv = document.createElement("div");
@@ -95,12 +101,7 @@ function setCalendar(calendarDiv, toolbarDiv, config){
 	});
 	$(".month-button").click(function(event){
 		var monthIndex = parseInt(this.id.split("-")[2]);
-		var monthDiv = getMonthDiv(calendarDiv, monthIndex);
-		var allMonths = document.getElementsByClassName("month");
-		$.each(allMonths, function(index, div){
-			div.style.display = "none";
-		});
-		monthDiv.style.display = "block";
+		toggleMonthView(calendarDiv, monthIndex);
 	});
 }
 
@@ -131,5 +132,5 @@ function loadCalendar(calendarDiv, config){
 	}
 }
 
-setCalendar(simulationCalendar, calendarToolbar, CONFIG);
+createCalendar(simulationCalendar, calendarToolbar, CONFIG);
 loadCalendar(simulationCalendar, CONFIG);

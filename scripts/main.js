@@ -6,8 +6,8 @@ var GLOBAL = {
 }
 
 var CONFIG = {
-	SIMULATION_START: 1420092000000,
-	SIMULATION_END: 1431579600000,
+	SIMULATION_START: 1457931600000,
+	SIMULATION_END: 1463979600000,
 	REAL_START: 1452391200000,
 	REAL_END: 1452402000000
 }
@@ -57,20 +57,23 @@ function setCalendar(calendarDiv, toolbarDiv, config){
 	var endMonth = new Date(config.SIMULATION_END).getMonth();
 	var months = (endMonth - startMonth) + 1;
 	var currentMonth = startMonth;
+	var currentDate = new Date(config.SIMULATION_START);
 	for(var m = 0; m < months; m++){
 		var labelDiv = document.createElement("h1");
 			labelDiv.classList.add("month-label");
-			labelDiv.innerHTML = moment(new Date(0, currentMonth)).format("MMMM");
-			calendarDiv.appendChild(labelDiv);
+			labelDiv.innerHTML = moment(currentDate).format("MMMM YYYY");
 		var monthDiv = document.createElement("div");
 			monthDiv.classList.add("month");
+			monthDiv.appendChild(labelDiv);
 			calendarDiv.appendChild(monthDiv);
 		var toolbarMonth = document.createElement("button");
 			toolbarMonth.classList.add("month-button");
-			toolbarMonth.innerHTML = moment(new Date(0, currentMonth)).format("MMMM YYYY");
+			toolbarMonth.innerHTML = moment(currentDate).format("MMMM YYYY");
+			toolbarMonth.id = "month-button-" + m;
 			toolbarDiv.appendChild(toolbarMonth);
 			console.log(toolbarDiv.style.width);
 		currentMonth++;
+		currentDate.setMonth(currentDate.getMonth() + 1);
 	}
 	var monthDivs = document.getElementsByClassName("month");
 	$.each(monthDivs, function(index, div){
@@ -90,11 +93,20 @@ function setCalendar(calendarDiv, toolbarDiv, config){
 				div.appendChild(dayDiv);
 		}
 	});
+	$(".month-button").click(function(event){
+		var monthIndex = parseInt(this.id.split("-")[2]);
+		var monthDiv = getMonthDiv(calendarDiv, monthIndex);
+		var allMonths = document.getElementsByClassName("month");
+		$.each(allMonths, function(index, div){
+			div.style.display = "none";
+		});
+		monthDiv.style.display = "block";
+	});
 }
 
 function getMonthDiv(calendarDiv, index){
 	var monthDivs = calendarDiv.children;
-	return monthDivs[(index * 2) + 1];
+	return monthDivs[index];
 }
 
 function loadCalendar(calendarDiv, config){
@@ -104,7 +116,7 @@ function loadCalendar(calendarDiv, config){
 	while(simTime < config.SIMULATION_END){
 		var simDate = new Date(simTime);
 		var monthDiv = getMonthDiv(calendarDiv, simMonth);
-		var dateBox = monthDiv.children[simWeek].children[simDate.getDay()];
+		var dateBox = monthDiv.children[simWeek + 1].children[simDate.getDay()];
 		dateBox.innerHTML = simDate.getDate();
 		dateBox.classList.remove("weekday-inactive");
 		dateBox.classList.add("weekday-active");

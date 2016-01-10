@@ -83,7 +83,7 @@ html{
 
 body{
 	margin: 0;
-	width: 98vw;
+	width: 100vw;
 	margin: 0 auto;
 }
 
@@ -96,6 +96,10 @@ body{
 /*---> STRUCTURE <----------------------------*/
 /*--------------------------------------------*/
 
+section{
+
+}
+
 /*--------------------------------------------*/
 /*---> CALENDAR <-----------------------------*/
 /*--------------------------------------------*/
@@ -105,10 +109,13 @@ div.month{
 	color: white;
 	text-align: center;
 
+	h1{
+		color: @charcoal;	
+	}
+
 	div.week{
 		
-		background: blue;
-		width: 90%;
+		width: 95%;
 		margin: 1%;
 
 		div.weekday{
@@ -141,13 +148,13 @@ div.month{
 
 div.slider{
 	overflow-x: scroll;
-	width: 100vw;
+	overflow-y: hidden;
+	width: 95vw;
 	padding: 1vh;
-	height: @buttonHeight * 1.1;
+	height: @buttonHeight * 1.5;
 }
 
 div.button-toolbar{
-	background: blue;
 	width: 1000vw;
 
 	button{
@@ -181,7 +188,7 @@ input, button, select{
 /*--------------------------------------------*/
 
 @scrollBar: white;
-@scrollBarBack: @mainColor;
+@scrollBarBack: #CCC;
 @scrollBarSize: 10px;
 
 ::-webkit-scrollbar{

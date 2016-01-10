@@ -5,15 +5,20 @@ var GLOBAL = {
 	HOUR: 3600000 //one hour in milliseconds
 }
 
+var STATE = {
+	CHECKPOINT: 0
+}
+
 var CONFIG = {
 	SIMULATION_START: 1457931600000,
 	SIMULATION_END: 1463979600000,
 	REAL_START: 1452391200000,
-	REAL_END: 1452402000000
+	REAL_END: 1452403800000
 }
 
 var realClock = document.getElementById('real-clock');
 var simulationClock = document.getElementById('simulation-clock');
+var countdownClock = document.getElementById('countdown-clock');
 
 var simulationCalendar = document.getElementById('simulation-calendar');
 var calendarToolbar = document.getElementById('calendar-toolbar');
@@ -36,6 +41,12 @@ function getSimulationTime(now, config){
 	var scale = calculateTimeScale(config);
 	var simTime = (realElapsed * scale) + config.SIMULATION_START;
 	return simTime;
+}
+
+function convertToRealTime(simDuration, config){
+	var scale = calculateTimeScale(config);
+	var realDuration = (simDuration / scale);
+	return realDuration;
 }
 
 //WARNING: ONLY WORKS FOR SIMULATIONS LESS THAN A YEAR LONG
@@ -63,9 +74,27 @@ function showCurrentDate(now, simWeek, config){
 	var dateBox = monthDiv.children[simWeek + 1].children[simDate.getDay()];
 }
 
+//Returns real time remaining in minutes
+function showTimeUntil(timestamp, config){
+	var realNow = new Date().getTime();
+	var simNow = getSimulationTime(realNow, config);
+	var simTimeRemaining = timestamp - simNow;
+	var realTimeRemaining = convertToRealTime(simTimeRemaining, config);
+	return (realTimeRemaining / GLOBAL.MINUTE);
+}
+
+function setCountdown(now, checkpoint, config){
+	var realTimeRemaining = showTimeUntil(checkpoint, config);
+	countdownClock.innerHTML = realTimeRemaining.toFixed(2);
+}
+
+STATE.CHECKPOINT = CONFIG.SIMULATION_END;
+console.log(STATE.CHECKPOINT);
+
 window.setInterval(function(){
 	var realNow = new Date().getTime();
 	setClock(realNow, CONFIG);
+	setCountdown(realNow, STATE.CHECKPOINT, CONFIG);
 	//showCurrentDate(realNow, CONFIG);
 }, 25);
 
@@ -123,6 +152,11 @@ function createCalendar(calendarDiv, toolbarDiv, config){
 		var monthIndex = parseInt(this.id.split("-")[2]);
 		toggleMonthView(calendarDiv, monthIndex);
 	});
+	$(".weekday").click(function(event){
+		var timestamp = parseInt(this.id.split("-")[1]);
+		console.log(timestamp)
+		STATE.CHECKPOINT = timestamp;
+	});
 }
 
 function getMonthDiv(calendarDiv, index){
@@ -141,6 +175,7 @@ function loadCalendar(calendarDiv, config){
 		dateBox.innerHTML = simDate.getDate();
 		dateBox.classList.remove("weekday-inactive");
 		dateBox.classList.add("weekday-active");
+		dateBox.id = "weekday-" + simTime;
 		simTime += GLOBAL.DAY;
 		if(simDate.getDay() === 6){
 			simWeek++;
